@@ -39,9 +39,6 @@ class FundingRateBot {
   async handleOpportunities(opportunities) {
     console.log(`\n🎯 Processing ${opportunities.length} opportunities...`);
 
-    // Send telegram notification
-    await this.telegram.notifyOpportunities(opportunities);
-
     // Get current active positions
     const activePositions = this.tradeExecutor.getActivePositions();
     
@@ -109,7 +106,6 @@ class FundingRateBot {
       } catch (error) {
         console.error(`❌ Failed to open position for ${opp.symbol} on ${opp.exchange}:`, error.message);
         console.log(`⏭️  Skipping ${opp.symbol}, moving to next opportunity...\n`);
-        await this.telegram.notifyError(`Failed to open ${opp.symbol} on ${opp.exchange}: ${error.message}`);
         // Continue to next token (loop will continue automatically)
       }
     }
@@ -294,9 +290,6 @@ class FundingRateBot {
       console.log(`   Futures USDT: $${balance.futures.available.toFixed(2)}`);
       console.log('');
     }
-
-    // Send startup notification
-    await this.telegram.sendMessage(`🚀 <b>Funding Rate Bot Started</b>\n⏰ ${new Date().toLocaleString('vi-VN')}`);
 
     // Start monitoring (fetch valid symbols first)
     await this.fundingMonitor.start();
